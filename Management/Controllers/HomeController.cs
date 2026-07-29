@@ -1,0 +1,32 @@
+using Core.Entities;
+using Management.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+
+namespace Management.Controllers
+{
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            // Ensure the user is authenticated before rendering the home page
+            if (!User?.Identity?.IsAuthenticated ?? true)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}

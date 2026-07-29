@@ -1,0 +1,15 @@
+﻿using Core.Entities;
+using Core.Models;
+
+namespace Core.Interfaces
+{
+    public interface IEmployee
+    {
+        Task<Employee?> GetByIdAsync(int id);
+        Task<Employee?> GetByUsernameOrEmailAsync(string usernameOrEmail);
+        Task<bool> UpdateAsync(Employee employee);
+        Task<bool> RegisterAsync(RegisterModel model);
+        Task<Employee?> AuthenticateAsync(LoginModel model);
+        Task<bool> IsUsernameOrEmailExistsAsync(string username, string email);
+    }
+}

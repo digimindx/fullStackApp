@@ -1,0 +1,14 @@
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\bin\Debug\net10.0\Core.deps.json
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\bin\Debug\net10.0\Core.dll
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\bin\Debug\net10.0\Core.pdb
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.AssemblyInfoInputs.cache
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.AssemblyInfo.cs
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.csproj.CoreCompileInputs.cache
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.dll
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\refint\Core.dll
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.pdb
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\ref\Core.dll
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\bin\Debug\net10.0\Core.runtimeconfig.json
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.csproj.AssemblyReference.cache
+C:\Users\abdel\Tutorials\FullStack\NOC\Core\obj\Debug\net10.0\Core.genruntimeconfig.cache
