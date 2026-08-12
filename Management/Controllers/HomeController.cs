@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Management.Models;
-using CORE.Entities;
+using CORE.Models.HR;
 
 namespace Management.Controllers;
 
@@ -23,4 +23,11 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    // Register 
+    [HttpGet]
+        public IActionResult Register()
+        {
+            return View(new RegisterViewModel());
+        }
 }
