@@ -46,9 +46,5 @@ namespace CORE.Entities.HR
 
         [Column(TypeName = "date")]
         public DateOnly? ValidTo { get; set; }
-
-        // Navigation property
-        [ForeignKey(nameof(EmployeeID))]
-        public virtual Employee? Employee { get; set; }
     }
 }
