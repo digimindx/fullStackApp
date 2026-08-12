@@ -9,8 +9,8 @@ public class HomeController : Controller
 {
     public IActionResult Index()
     {
-        Employee emp = new Employee();
-        return Ok(new{message = emp });
+        
+        return View();
     }
 
     public IActionResult Privacy()
