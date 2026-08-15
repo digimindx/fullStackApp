@@ -63,5 +63,8 @@ namespace CORE.Entities.HR
 
         [Required]
         public bool IsActive { get; set; } = false;
+
+        // Navigation property
+        public EmployeeAccount? EmployeeAccount { get; set; }
     }
 }
