@@ -10,6 +10,8 @@ using CORE.Models.HR;
 using CORE.Entities.HR;
 // استدعاء واجهات المستودعات من مشروع CORE
 using CORE.Interfaces.HR;
+// استدعاء EF Core للتعامل مع الاستثناءات
+using Microsoft.EntityFrameworkCore;
 
 namespace Management.Controllers
 {
@@ -79,28 +81,49 @@ namespace Management.Controllers
 
             try
             {
+                // ─── 0. التحقق من عدم تكرار اسم المستخدم أو البريد الإلكتروني ──
+                var existingByUsername = await _employeeAccountRepository.GetByUsernameAsync(model.Username);
+                if (existingByUsername != null)
+                {
+                    ModelState.AddModelError("Username", "اسم المستخدم مستخدم بالفعل. يرجى اختيار اسم آخر.");
+                    return View(model);
+                }
+
+                var existingByEmail = await _employeeAccountRepository.GetByEmailAsync(model.Email);
+                if (existingByEmail != null)
+                {
+                    ModelState.AddModelError("Email", "البريد الإلكتروني مسجل بالفعل. يرجى استخدام بريد آخر.");
+                    return View(model);
+                }
+
                 // ─── 1. إنشاء وحفظ كيان الموظف الأساسي ─────────────────────────
                 var employee = new Employee
                 {
-                    FullName = model.FullName,     // تعيين الاسم الكامل من النموذج
-                    LastName = model.LastName,     // تعيين اسم العائلة من النموذج
-                    Gender = model.Gender,         // تعيين الجنس من النموذج
-                    DateOfBirth = model.DateOfBirth // تعيين تاريخ الميلاد من النموذج
+                    EmployeeNumber = GenerateEmployeeNumber(), // ✅ توليد رقم موظف فريد
+                    FullName = model.FullName,                 // تعيين الاسم الكامل من النموذج
+                    LastName = model.LastName,                  // تعيين اسم العائلة من النموذج
+                    Gender = model.Gender,                      // تعيين الجنس من النموذج
+                    DateOfBirth = model.DateOfBirth,            // تعيين تاريخ الميلاد من النموذج
+                    IsBornAbroad = false,                       // ✅ تعيين الحقل الإلزامي
+                    HasDoubleNationality = false,               // ✅ تعيين الحقل الإلزامي
+                    CreatedBy = "System",                       // ✅ تعيين حقل التدقيق
+                    IsActive = true                             // ✅ تفعيل الموظف مباشرة
                 };
 
                 // إضافة الموظف إلى قاعدة البيانات
-                // ملاحظة: AddAsync في EmployeeRepository تستدعي SaveChangesAsync داخلياً
-                // لذا سيتم توليد employee.EmployeeID تلقائياً بعد هذا السطر
                 await _employeeRepository.AddAsync(employee);
 
                 // ─── 2. إنشاء وحفظ عنوان الموظف ────────────────────────────────
                 var address = new EmployeeAddress
                 {
-                    EmployeeID = employee.EmployeeID, // ✅ استخدام المعرف المولد من الخطوة السابقة
-                    Email = model.Email               // تعيين البريد الإلكتروني من النموذج
+                    EmployeeID = employee.EmployeeID,           // ✅ استخدام المعرف المولد من الخطوة السابقة
+                    AddressType = 'C',                          // ✅ تعيين نوع العنوان (حالي)
+                    IsPrimary = true,                           // ✅ تعيين كعنوان رئيسي
+                    Email = model.Email,                        // تعيين البريد الإلكتروني من النموذج
+                    CreatedBy = "System",                       // ✅ تعيين حقل التدقيق
                 };
 
-                // إضافة العنوان إلى قاعدة البيانات (AddAsync تحفظ تلقائياً)
+                // إضافة العنوان إلى قاعدة البيانات
                 await _employeeAddressRepository.AddAsync(address);
 
                 // ─── 3. توليد الملح (Salt) بشكل عشوائي وآمن تشفيرياً ───────────
@@ -129,27 +152,50 @@ namespace Management.Controllers
                     // ─── 5. إنشاء وحفظ حساب الموظف ─────────────────────────────
                     var account = new EmployeeAccount
                     {
-                        EmployeeID = employee.EmployeeID, // ✅ استخدام المعرف المولد من الخطوة الأولى
-                        Username = model.Username,        // تعيين اسم المستخدم من النموذج
-                        Email = model.Email,              // تعيين البريد الإلكتروني من النموذج
-                        PasswordHash = passwordHash,      // استخدام الهاش المولد محلياً
-                        PasswordSalt = passwordSalt       // استخدام الملح المولد محلياً
+                        EmployeeID = employee.EmployeeID,       // ✅ استخدام المعرف المولد من الخطوة الأولى
+                        Gender = model.Gender,                  // ✅ تعيين الجنس من النموذج
+                        Username = model.Username,               // تعيين اسم المستخدم من النموذج
+                        Email = model.Email,                     // تعيين البريد الإلكتروني من النموذج
+                        PasswordHash = passwordHash,             // استخدام الهاش المولد محلياً
+                        PasswordSalt = passwordSalt,             // استخدام الملح المولد محلياً
+                        IsLocked = false,                        // ✅ تعيين كغير مقفل
+                        FailedLoginAttempts = 0,                 // ✅ تصفير محاولات الفشل
+                        CreatedBy = "System",                    // ✅ تعيين حقل التدقيق
                     };
 
-                    // إضافة الحساب إلى قاعدة البيانات (AddAsync تحفظ تلقائياً)
+                    // إضافة الحساب إلى قاعدة البيانات
                     await _employeeAccountRepository.AddAsync(account);
                 }
 
                 // ─── 6. إعادة التوجيه إلى صفحة الفهرس بعد النجاح ──────────────
                 return RedirectToAction("Index", "HR");
             }
+            catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("unique") == true || 
+                                                ex.InnerException?.Message.Contains("duplicate") == true ||
+                                                ex.InnerException?.Message.Contains("constraint") == true)
+            {
+                // معالجة أخطاء المفاتيح المكررة بشكل محدد
+                ModelState.AddModelError("", "حدث خطأ: البيانات مسجلة بالفعل. يرجى التحقق من المعلومات المدخلة.");
+                return View(model);
+            }
             catch (Exception ex)
             {
                 // إضافة رسالة خطأ عامة للنموذج دون تسريب تفاصيل الاستثناء لأسباب أمنية
-                ModelState.AddModelError(ex.Message, "حدث خطأ أثناء عملية التسجيل. يرجى المحاولة لاحقاً.");
+                ModelState.AddModelError("", "حدث خطأ أثناء عملية التسجيل. يرجى المحاولة لاحقاً.");
                 // إرجاع العرض مع بيانات النموذج الأصلية ليتمكن المستخدم من التعديل
                 return View(model);
             }
+        }
+
+        /// <summary>
+        /// توليد رقم موظف فريد بناءً على التاريخ والوقت الحالي
+        /// </summary>
+        private string GenerateEmployeeNumber()
+        {
+            // تنسيق: EMP-YYYYMMDD-HHMMSS-XXXX (مثال: EMP-20260817-143025-0001)
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            var randomPart = new Random().Next(1000, 9999);
+            return $"EMP-{timestamp}-{randomPart}";
         }
     }
 }

@@ -56,8 +56,6 @@ public class AppDbContext : DbContext
             entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.LastModifiedBy).HasMaxLength(128);
 
-
-
             // Gender constraint
             entity.ToTable(t => t.HasCheckConstraint("CK_Gender", "Gender IN ('F', 'M')"));
 
@@ -90,9 +88,9 @@ public class AppDbContext : DbContext
             entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.LastModifiedBy).HasMaxLength(128);
 
-            // FK to Employee
+            // ✅ تم تحديد ForeignKey صراحة لمنع إنشاء EmployeeID1
             entity.HasOne<Employee>()
-                  .WithMany()
+                  .WithMany() 
                   .HasForeignKey(e => e.EmployeeID)
                   .OnDelete(DeleteBehavior.Cascade);
         });
@@ -122,6 +120,12 @@ public class AppDbContext : DbContext
 
             // AddressType constraint
             entity.ToTable(t => t.HasCheckConstraint("CK_AddressType", "AddressType IN ('C', 'P')"));
+            
+            // ✅ تم تحديد ForeignKey صراحة
+            entity.HasOne<Employee>()
+                  .WithMany()
+                  .HasForeignKey(e => e.EmployeeID)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         // EmployeeBankAccount
@@ -144,7 +148,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.ValidFrom).HasColumnType("date");
             entity.Property(e => e.ValidTo).HasColumnType("date");
 
-            // FK to Employee
+            // ✅ تم تحديد ForeignKey صراحة
             entity.HasOne<Employee>()
                   .WithMany()
                   .HasForeignKey(e => e.EmployeeID)
@@ -153,12 +157,10 @@ public class AppDbContext : DbContext
 
         // ─── Financial Schema ────────────────────────────────────────
 
-        modelBuilder.HasDefaultSchema("dbo");
-
         // FinancialAccount
-        modelBuilder.Entity<FinancialAccount>(entity =>
+       /*  modelBuilder.Entity<FinancialAccount>(entity =>
         {
-            entity.ToTable("FinancialAccounts");
+            entity.ToTable("FinancialAccounts", "FIN"); // يفضل وضع الجداول المالية في Schema مختلف مثل FIN
 
             entity.HasKey(e => e.AccountID);
 
@@ -170,11 +172,11 @@ public class AppDbContext : DbContext
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
 
-            // FK to Employee
+            // ✅ تم تحديد ForeignKey صراحة
             entity.HasOne<Employee>()
                   .WithMany()
                   .HasForeignKey(e => e.EmployeeID)
                   .OnDelete(DeleteBehavior.Cascade);
-        });
+        }); */
     }
 }
