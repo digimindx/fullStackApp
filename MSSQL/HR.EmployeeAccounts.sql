@@ -12,7 +12,6 @@ CREATE TABLE [HR].[EmployeeAccounts](
 	[AccountID] [int] IDENTITY(1,1) NOT NULL,
 	[EmployeeID] [int] NOT NULL,
 	[Gender] [nchar](1) NULL,
-	[DateOfBirth] [date] NOT NULL,
 	[Email] [nvarchar](100) NOT NULL,
 	[Username] [nvarchar](50) NOT NULL,
 	[PasswordHash] [nvarchar](1000) NOT NULL,

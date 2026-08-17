@@ -17,10 +17,6 @@ namespace CORE.Entities.HR
         public char? Gender { get; set; }
 
         [Required]
-        [Column(TypeName = "date")]
-        public DateOnly DateOfBirth { get; set; }
-
-        [Required]
         [MaxLength(100)]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = string.Empty;

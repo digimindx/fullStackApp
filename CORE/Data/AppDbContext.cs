@@ -77,7 +77,6 @@ public class AppDbContext : DbContext
 
             entity.Property(e => e.EmployeeID).IsRequired();
             entity.Property(e => e.Gender).HasMaxLength(1);
-            entity.Property(e => e.DateOfBirth).HasColumnType("date");
             entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
             entity.Property(e => e.PasswordHash).IsRequired().HasMaxLength(1000);
