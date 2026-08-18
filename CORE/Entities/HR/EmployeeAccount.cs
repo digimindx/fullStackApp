@@ -44,12 +44,11 @@ namespace CORE.Entities.HR
         public bool IsActive { get; set; } = true;
 
         [Required]
-        public bool IsLocked { get; set; }
+        public bool IsLocked { get; set; } = false;
 
         [Column(TypeName = "datetime")]
         public DateTime? LockedUntil { get; set; }
 
-        [Required]
         public int FailedLoginAttempts { get; set; }
 
         [MaxLength(500)]

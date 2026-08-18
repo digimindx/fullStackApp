@@ -26,7 +26,6 @@ namespace CORE.Entities.HR
         [MaxLength(1)]
         public char? Gender { get; set; }
 
-        [Required]
         [Column(TypeName = "date")]
         public DateOnly DateOfBirth { get; set; }
 
@@ -34,12 +33,12 @@ namespace CORE.Entities.HR
         public string? BirthPlace { get; set; }
 
         [Required]
-        public bool IsBornAbroad { get; set; }
+        public bool IsBornAbroad { get; set; } = false;
 
         public int? NationalityCode { get; set; }
 
         [Required]
-        public bool HasDoubleNationality { get; set; }
+        public bool HasDoubleNationality { get; set; } = false;
 
         [MaxLength(1)]
         public char? MaritalStatus { get; set; }
