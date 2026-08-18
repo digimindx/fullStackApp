@@ -1,7 +1,7 @@
 using CORE.Entities.Financial;
 using CORE.Entities.HR;
 using Microsoft.EntityFrameworkCore;
-
+// this is a new edit in my code
 namespace CORE.Data;
 
 public class AppDbContext : DbContext
